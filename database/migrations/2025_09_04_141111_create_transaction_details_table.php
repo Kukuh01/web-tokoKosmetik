@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('price');
+            $table->unsignedBigInteger('quantity');
+
+            $table->foreignId('cosmetic_id')->constrained(
+                table: 'cosmetics',
+                indexName: 'td_cosmetics_id'
+            )->cascadeOnDelete();
+
+            $table->foreignId('booking_transaction_id')->constrained(
+                table: 'booking_transactions',
+                indexName: 'td_booking_transactions_id'
+            )->cascadeOnDelete();
+            
+            $table->softDeletes();
             $table->timestamps();
         });
     }

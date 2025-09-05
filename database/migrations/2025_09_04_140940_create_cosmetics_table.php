@@ -13,6 +13,23 @@ return new class extends Migration
     {
         Schema::create('cosmetics', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug');
+            $table->string('thumbnail');
+            $table->text('about');
+            $table->boolean('is_popular');
+            $table->unsignedBigInteger('price');
+            $table->unsignedBigInteger('stock');
+            $table->foreignId('brand_id')->constrained(
+                table: 'brands',
+                indexName: 'cosmetic_brand_id'
+            )->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained(
+                table: 'categories',
+                indexName: 'cosmetic_category_id'
+            )->cascadeOnDelete();
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

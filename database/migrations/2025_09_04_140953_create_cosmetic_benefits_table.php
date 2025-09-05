@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('cosmetic_benefits', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->foreignId('cosmetic_id')->constrained(
+                table: 'cosmetics',
+                indexName: 'benefits_cosmetics_id'
+            )->cascadeOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
