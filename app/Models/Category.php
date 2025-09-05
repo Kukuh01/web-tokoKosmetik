@@ -28,4 +28,12 @@ class Category extends Model
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    // displaying popular data that belongs to one category of data
+    public function popularCosmetics()
+    {
+        return $this->hasMany(Cosmetic::class)
+                    ->where('is_popular', true)
+                    ->orderBy('created_at', 'desc');
+    }
 }

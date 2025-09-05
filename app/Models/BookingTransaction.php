@@ -30,4 +30,17 @@ class BookingTransaction extends Model
     {
         return $this->hasMany(TransactionDetails::class);
     }
+
+    //Function to generate random unique booking_trx_id
+    public static function generateUniqueTrxId(){
+        $prefix = 'SHAYNA';
+        do {
+            $randomString = $prefix . mt_rand(1000, 9999);
+        }
+        while (
+            self::where('booking_trx_id', $randomString)->exists() //looping until same booking_trx_id not exists
+        );
+
+        return $randomString;
+    }
 }

@@ -24,10 +24,4 @@ class CosmeticTestimonial extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
-
-    //Create slug
-    public function setNameAttributes($value){
-        $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
-    }
 }

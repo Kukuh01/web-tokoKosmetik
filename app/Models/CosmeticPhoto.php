@@ -15,9 +15,12 @@ class CosmeticPhoto extends Model
         'cosmetic_id'
     ];
 
-    //CosmeticsPhotos<-Many To One->cosmetic
-    public function cosmetic(): BelongsTo
-    {
-        return $this->belongsTo(Cosmetic::class, 'cosmetic_id');
-    }
+    /**
+     * Function/ORM not using, because in program not calling CosmeticPhoto table to display data
+     */
+    // //CosmeticsPhotos<-Many To One->cosmetic
+    // public function cosmetic(): BelongsTo
+    // {
+    //     return $this->belongsTo(Cosmetic::class, 'cosmetic_id');
+    // }
 }

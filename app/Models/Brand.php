@@ -29,4 +29,10 @@ class Brand extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
+    // displaying popular data that belongs to one category of data
+    public function popularCosmetic(){
+        return $this->hasMany(Cosmetic::class)
+                    ->where('is_popular', true)
+                    ->orderBy('created_at','desc');
+    }
 }   

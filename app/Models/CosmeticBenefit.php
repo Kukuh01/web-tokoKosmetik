@@ -16,10 +16,13 @@ class CosmeticBenefit extends Model
         'cosmetic_id'
     ];
 
-    //CosmeticsBenefit<-Many to One->Cosmetics
-    public function cosmetics(): BelongsTo
-    {
-        return $this->belongsTo(Cosmetic::class, 'cosmetic_id');
-    }
+    /**
+     * Function/ORM Not using, because in program not calling CosmeticBenefit table to display data
+     */
+    // //CosmeticsBenefit<-Many to One->Cosmetics
+    // public function cosmetics(): BelongsTo
+    // {
+    //     return $this->belongsTo(Cosmetic::class, 'cosmetic_id');
+    // }
 
 }
