@@ -6,6 +6,8 @@ use App\Filament\Resources\BrandResource\Pages;
 use App\Filament\Resources\BrandResource\RelationManagers;
 use App\Models\Brand;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,7 +25,14 @@ class BrandResource extends Resource
     {
         return $form
             ->schema([
-                //
+                //Input Data
+                TextInput::make('name')
+                ->required()
+                ->maxLength(255),
+
+                FileUpload::make('photo')
+                ->image()
+                ->required(),
             ]);
     }
 
@@ -31,13 +40,19 @@ class BrandResource extends Resource
     {
         return $table
             ->columns([
-                //
+                //Display Data
+                Tables\Columns\ImageColumn::make('photo'),
+                Tables\Columns\TextColumn::make('name')
+                ->searchable()
+                ->sortable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
