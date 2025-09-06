@@ -21,7 +21,7 @@ class Cosmetic extends Model
         'is_popular',
         'price',
         'brand_id',
-        'stock'
+        'stock',
     ];
 
     //cosmetics<-Many to One->Category
@@ -55,7 +55,7 @@ class Cosmetic extends Model
     }
 
     // Create Slug
-    public function setNameAttributes($value){
+    public function setNameAttribute($value){
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
