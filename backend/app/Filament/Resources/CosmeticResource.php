@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\CosmeticResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CosmeticResource\RelationManagers;
+use App\Filament\Resources\CosmeticResource\RelationManagers\CosmeticTestimonialsRelationManager;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
@@ -150,7 +151,7 @@ class CosmeticResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CosmeticTestimonialsRelationManager::class,
         ];
     }
 
