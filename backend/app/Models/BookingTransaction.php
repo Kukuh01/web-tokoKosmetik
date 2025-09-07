@@ -22,7 +22,8 @@ class BookingTransaction extends Model
         'address',
         'city',
         'sub_total_amount',
-        'quantity'
+        'quantity',
+        'post_code'
     ];
 
     //BookingTransaction<-One to Many->TransactionDetails
