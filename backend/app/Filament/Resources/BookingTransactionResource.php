@@ -20,6 +20,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\ToggleButtons;
@@ -32,6 +33,9 @@ class BookingTransactionResource extends Resource
     protected static ?string $model = BookingTransaction::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    // Can group resource
+    protected static ?string $navigationGroup = 'Customer';
 
     public static function updateTotals(Get $get, Set $set): void
     {   
@@ -237,7 +241,31 @@ class BookingTransactionResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+
+                /**
+                 * Custom Button action
+                 */
+                Tables\Actions\Action::make('approve')
+                ->label('Approve')
+                ->action(function (BookingTransaction $record){
+                    $record->is_paid = true;
+                    $record->save();
+
+                    //Can do anyting
+
+                    Notification::make()
+                    ->title('Order Approved')
+                    ->success()
+                    ->body('The order has been successfully approved.')
+                    ->send();
+                })
+                ->color('success')
+                ->requiresConfirmation()
+                ->visible(fn (BookingTransaction $record) => !$record->is_paid),
+
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
