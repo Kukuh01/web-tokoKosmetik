@@ -12,7 +12,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/cosmetic/{cosmetic:slug}', [CosmeticController::class, 'show']); // use binding model but replace the id to slug
+Route::get('/cosmetic/{cosmetic:slug}', [CosmeticController::class, 'show']); // use binding model but replace the id to slug, (method get forwader to method show in CosmeticController)
 Route::apiResource('/cosmetics', CosmeticController::class); //register method crud laravel (index, show, edit, delete, etc...)
 
 Route::get('/category/{category:slug}', [CategoryController::class, 'show']);
