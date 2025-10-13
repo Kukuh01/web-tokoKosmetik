@@ -254,6 +254,7 @@ class BookingTransactionResource extends Resource
                     $record->save();
 
                     //Can do anyting
+                    // ex: send email, send sms
 
                     Notification::make()
                     ->title('Order Approved')
