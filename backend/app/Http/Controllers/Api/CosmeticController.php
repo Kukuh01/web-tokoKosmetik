@@ -83,7 +83,7 @@ class CosmeticController extends Controller
     public function show(Cosmetic $cosmetic)
     {
         // Muat relasi-relasi penting agar data lengkap
-        $cosmetic->load(['category', 'benefits', 'testimonials', 'photos', 'brand']);
+        $cosmetic->load(['category', 'cosmeticBenefits', 'cosmeticTestimonials', 'cosmeticPhotos', 'brand']);
 
         // Kembalikan data kosmetik dalam format API Resource tunggal
         return new CosmeticApiResource($cosmetic);
