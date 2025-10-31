@@ -18,13 +18,13 @@ class TransactionDetails extends Model
     ];
 
     //TransactionDetails<-Many to One->BookingTransaction
-    public function BookingTransaction(): BelongsTo
+    public function bookingTransaction(): BelongsTo
     {
         return $this->belongsTo(BookingTransaction::class, 'booking_transaction_id');
     }
 
-    //TransactionDetails<-Many to One->BookingTransaction
-    public function Cosmetics(): BelongsTo
+    //TransactionDetails<-Many to One->Cosmetics
+    public function cosmetics(): BelongsTo
     {
         return $this->belongsTo(Cosmetic::class, 'cosmetic_id');
     }

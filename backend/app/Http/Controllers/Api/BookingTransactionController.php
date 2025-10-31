@@ -81,13 +81,13 @@ class BookingTransactionController extends Controller
         ->where('booking_trx_id', $request->booking_trx_id)
         ->with([
             'transactionDetails',
-            'transactionDetails.cosmetic',
+            'transactionDetails.cosmetics',
         ])
         ->first();
 
         if(!$booking){
             return response()->json(['message' => 'Booking not found'], 404);
         }
-        return new BookingTransactionResource($booking);
+        return new BookingTransactionApiResource($booking);
     }
 }

@@ -54,6 +54,12 @@ class Cosmetic extends Model
         return $this->hasMany(CosmeticPhoto::class);
     }
 
+    // //cosmetic<-One to Many->transactionDetails
+    // public function transactionDetails(): HasMany
+    // {
+    //     return $this->hasMany(TransactionDetails::class);
+    // }
+
     // Create Slug
     public function setNameAttribute($value){
         $this->attributes['name'] = $value;
