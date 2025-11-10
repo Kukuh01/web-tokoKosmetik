@@ -1,4 +1,85 @@
+import { useEffect, useState } from "react"
+import {Swiper, SwiperSlide} from "swiper/react"
+import type { Category, Cosmetic } from "../types/type"
+import apiClient from "../services/apiServices"
+
+const fetchCategories = async () => {
+    const response = await apiClient.get("/categories");
+    return response.data.data;
+}
+
+const fetchPopularCosmetics = async () => {
+    const response = await apiClient.get("/cosmetics?limit=4&is_popular=1");
+    return response.data.data;
+}
+
+const fetchAllCosmetics = async () => {
+    const response = await apiClient.get("/cosmetics?limit=4");
+    return response.data.data;
+}
+
 export default function BrowsePage(){
+
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [popularCosmetics, setPopularCosmetics] = useState<Cosmetic[]>([]);
+    const [allCosmetics, setAllCosmetics] = useState<Cosmetic[]>([]);
+
+    const [loadingCategories, setLoadingCategories] = useState(true);
+    const [loadingPopularCosmetics, setLoadingPopularCosmetics] = useState(true);
+    const [loadingAllCosmetics, setLoadingAllCosmetics] = useState(true);
+
+    const BASE_URL = import.meta.env.VITE_REACT_API_STORAGE_URL;
+
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+
+        const fetchCategoriesData = async () => {
+            try {
+                const categoriesData = await fetchCategories();
+                setCategories(categoriesData);
+            } catch {
+                setError("Failed to load categories");
+            } finally {
+                setLoadingCategories(false);
+            }
+        };
+
+        const fetchPopularCosmeticsData = async () => {
+            try {
+                const popularCosmeticsData = await fetchPopularCosmetics();
+                setPopularCosmetics(popularCosmeticsData);
+            } catch {
+                setError("Failed to load services");
+            } finally {
+                setLoadingPopularCosmetics(false);
+            }
+        };
+
+        const fetchCosmeticsData = async () => {
+            try {
+                const cosmeticsData = await fetchAllCosmetics();
+                setAllCosmetics(cosmeticsData);
+            } catch {
+                setError("Failed to load services");
+            } finally {
+                setLoadingAllCosmetics(false);
+            }
+        };
+
+        fetchCategoriesData();
+        fetchCosmeticsData();
+        fetchPopularCosmeticsData();
+
+    }, []);
+
+    if (loadingCategories && loadingAllCosmetics && loadingPopularCosmetics){
+        return <p>Loading categories and cosmetics...</p>;
+    }
+    if (error){
+        return <p>Error loading data: {error}</p>;
+    }
+
     return(
         <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-white pb-[141px]">
         <section id="Info">
@@ -72,9 +153,17 @@ export default function BrowsePage(){
             </div>
         </section>
         <section id="Hero">
-            <div id="HeroSlider" className="swiper w-full overflow-x-hidden">
+            {/* <div id="HeroSlider" className="swiper w-full overflow-x-hidden"> */}
             <div className="swiper-wrapper">
-                <div className="swiper-slide !w-fit">
+                <Swiper
+                    className="swiper-wrapper"
+                    direction="horizontal"
+                    spaceBetween={16}
+                    slidesPerView="auto"
+                    slidesOffsetAfter={20}
+                    slidesOffsetBefore={20}
+                >
+                <SwiperSlide className="swiper-slide !w-fit">
                 <a href="">
                     <div className="flex h-[190px] w-[320px] items-center justify-center overflow-hidden rounded-3xl">
                     <img
@@ -84,8 +173,8 @@ export default function BrowsePage(){
                     />
                     </div>
                 </a>
-                </div>
-                <div className="swiper-slide !w-fit">
+                </SwiperSlide>
+                <SwiperSlide  className="swiper-slide !w-fit">
                 <a href="">
                     <div className="flex h-[190px] w-[320px] items-center justify-center overflow-hidden rounded-3xl">
                     <img
@@ -95,8 +184,8 @@ export default function BrowsePage(){
                     />
                     </div>
                 </a>
-                </div>
-                <div className="swiper-slide !w-fit">
+                </SwiperSlide>
+                <SwiperSlide className="swiper-slide !w-fit">
                 <a href="">
                     <div className="flex h-[190px] w-[320px] items-center justify-center overflow-hidden rounded-3xl">
                     <img
@@ -106,8 +195,8 @@ export default function BrowsePage(){
                     />
                     </div>
                 </a>
-                </div>
-            </div>
+                </SwiperSlide >
+            </Swiper>
             </div>
         </section>
         <section id="TopCategories">
@@ -238,8 +327,15 @@ export default function BrowsePage(){
                 id="PopularChoicesSlider"
                 className="swiper w-full overflow-x-hidden"
             >
-                <div className="swiper-wrapper">
-                <div className="swiper-slide !w-fit">
+                <Swiper
+                className="swiper-wrapper"
+                direction="horizontal"
+                spaceBetween={14}
+                slidesPerView="auto"
+                slidesOffsetAfter={20}
+                slidesOffsetBefore={20}
+                >
+                <SwiperSlide className="swiper-slide !w-fit">
                     <a href="details.html">
                     <div className="relative flex h-[276px] w-[222px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
                         <div className="flex h-full flex-col justify-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
@@ -274,8 +370,8 @@ export default function BrowsePage(){
                         </div>
                     </div>
                     </a>
-                </div>
-                <div className="swiper-slide !w-fit">
+                </SwiperSlide>
+                <SwiperSlide className="swiper-slide !w-fit">
                     <a href="details.html">
                     <div className="relative flex h-[276px] w-[222px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
                         <div className="flex h-full flex-col justify-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
@@ -310,8 +406,8 @@ export default function BrowsePage(){
                         </div>
                     </div>
                     </a>
-                </div>
-                <div className="swiper-slide !w-fit">
+                </SwiperSlide>
+                <SwiperSlide className="swiper-slide !w-fit">
                     <a href="details.html">
                     <div className="relative flex h-[276px] w-[222px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
                         <div className="flex h-full flex-col justify-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
@@ -346,8 +442,8 @@ export default function BrowsePage(){
                         </div>
                     </div>
                     </a>
-                </div>
-                <div className="swiper-slide !w-fit">
+                </SwiperSlide>
+                <SwiperSlide className="swiper-slide !w-fit">
                     <a href="details.html">
                     <div className="relative flex h-[276px] w-[220px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
                         <div className="flex h-full flex-col justify-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
@@ -382,8 +478,8 @@ export default function BrowsePage(){
                         </div>
                     </div>
                     </a>
-                </div>
-                </div>
+                </SwiperSlide>
+            </Swiper>
             </div>
             </div>
         </section>
