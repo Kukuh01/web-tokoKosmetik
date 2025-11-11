@@ -80,6 +80,15 @@ export default function BrowsePage(){
         return <p>Error loading data: {error}</p>;
     }
 
+    // Format currency to IDR
+    const formatCurrency = (value: number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+        }).format(value);
+    };
+
     return(
         <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-white pb-[141px]">
         <section id="Info">
@@ -203,120 +212,34 @@ export default function BrowsePage(){
             <div className="flex flex-col gap-4 px-5">
             <h2 className="font-bold">Top Categories</h2>
             <div className="categories-cards grid grid-cols-3 gap-4">
+
+            {categories.length > 0 ? (
+                categories.map((category) => (
+                
                 <a href="category.html">
                 <div className="flex h-[142px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
                     <div className="flex h-full w-full flex-col justify-center rounded-[23px] bg-white px-[10px] hover:rounded-[22px]">
                     <div className="mx-auto mb-[10px] flex size-[60px] items-center justify-center overflow-hidden rounded-full">
                         <img
-                        src="/assets/images/thumbnails/serum.png"
+                        src={`${BASE_URL}/${category.photo}`}
                         alt="image"
                         className="h-full w-full object-cover"
                         />
                     </div>
                     <h3 className="mb-[2px] text-center text-sm font-semibold leading-[21px]">
-                        Serum
+                        {category.name}
                     </h3>
                     <p className="text-center text-sm leading-[21px] text-cosmetics-grey">
-                        18,398
+                        {category.cosmetics_count} items
                     </p>
                     </div>
                 </div>
                 </a>
-                <a href="category.html">
-                <div className="flex h-[142px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                    <div className="flex h-full w-full flex-col justify-center rounded-[23px] bg-white px-[10px] hover:rounded-[22px]">
-                    <div className="mx-auto mb-[10px] flex size-[60px] items-center justify-center overflow-hidden rounded-full">
-                        <img
-                        src="/assets/images/thumbnails/mascaras.png"
-                        alt="image"
-                        className="h-full w-full object-cover"
-                        />
-                    </div>
-                    <h3 className="mb-[2px] text-center text-sm font-semibold leading-[21px]">
-                        Mascaras
-                    </h3>
-                    <p className="text-center text-sm leading-[21px] text-cosmetics-grey">
-                        18,398
-                    </p>
-                    </div>
-                </div>
-                </a>
-                <a href="category.html">
-                <div className="flex h-[142px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                    <div className="flex h-full w-full flex-col justify-center rounded-[23px] bg-white px-[10px] hover:rounded-[22px]">
-                    <div className="mx-auto mb-[10px] flex size-[60px] items-center justify-center overflow-hidden rounded-full">
-                        <img
-                        src="/assets/images/thumbnails/lipsticks.png"
-                        alt="image"
-                        className="h-full w-full object-cover"
-                        />
-                    </div>
-                    <h3 className="mb-[2px] text-center text-sm font-semibold leading-[21px]">
-                        Lipsticks
-                    </h3>
-                    <p className="text-center text-sm leading-[21px] text-cosmetics-grey">
-                        18,398
-                    </p>
-                    </div>
-                </div>
-                </a>
-                <a href="category.html">
-                <div className="flex h-[142px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                    <div className="flex h-full w-full flex-col justify-center rounded-[23px] bg-white px-[10px] hover:rounded-[22px]">
-                    <div className="mx-auto mb-[10px] flex size-[60px] items-center justify-center overflow-hidden rounded-full">
-                        <img
-                        src="/assets/images/thumbnails/brushes.png"
-                        alt="image"
-                        className="h-full w-full object-cover"
-                        />
-                    </div>
-                    <h3 className="mb-[2px] text-center text-sm font-semibold leading-[21px]">
-                        Brushes
-                    </h3>
-                    <p className="text-center text-sm leading-[21px] text-cosmetics-grey">
-                        18,398
-                    </p>
-                    </div>
-                </div>
-                </a>
-                <a href="category.html">
-                <div className="flex h-[142px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                    <div className="flex h-full w-full flex-col justify-center rounded-[23px] bg-white px-[10px] hover:rounded-[22px]">
-                    <div className="mx-auto mb-[10px] flex size-[60px] items-center justify-center overflow-hidden rounded-full">
-                        <img
-                        src="/assets/images/thumbnails/face-mask.png"
-                        alt="image"
-                        className="h-full w-full object-cover"
-                        />
-                    </div>
-                    <h3 className="mb-[2px] text-center text-sm font-semibold leading-[21px]">
-                        Face Mask
-                    </h3>
-                    <p className="text-center text-sm leading-[21px] text-cosmetics-grey">
-                        18,398
-                    </p>
-                    </div>
-                </div>
-                </a>
-                <a href="category.html">
-                <div className="flex h-[142px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                    <div className="flex h-full w-full flex-col justify-center rounded-[23px] bg-white px-[10px] hover:rounded-[22px]">
-                    <div className="mx-auto mb-[10px] flex size-[60px] items-center justify-center overflow-hidden rounded-full">
-                        <img
-                        src="/assets/images/thumbnails/foundation.png"
-                        alt="image"
-                        className="h-full w-full object-cover"
-                        />
-                    </div>
-                    <h3 className="mb-[2px] text-center text-sm font-semibold leading-[21px]">
-                        Foundation
-                    </h3>
-                    <p className="text-center text-sm leading-[21px] text-cosmetics-grey">
-                        18,398
-                    </p>
-                    </div>
-                </div>
-                </a>
+                ))
+            ) : (
+                <p>Belum ada data category</p>
+            )}
+
             </div>
             </div>
         </section>
@@ -335,6 +258,10 @@ export default function BrowsePage(){
                 slidesOffsetAfter={20}
                 slidesOffsetBefore={20}
                 >
+
+                {popularCosmetics.length > 0 ? (
+                popularCosmetics.map((cosmetic) => (
+                
                 <SwiperSlide className="swiper-slide !w-fit">
                     <a href="details.html">
                     <div className="relative flex h-[276px] w-[222px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
@@ -351,134 +278,31 @@ export default function BrowsePage(){
                         </span>
                         <div className="mx-auto flex h-[130px] w-full items-center justify-center">
                             <img
-                            src="/assets/images/thumbnails/coverblur.png"
+                            src={`${BASE_URL}/${cosmetic.thumbnail}`}
                             alt="image"
                             className="h-full w-full object-contain"
                             />
                         </div>
                         <div className="des flex flex-col gap-1">
                             <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                            SOMETHINC
+                            {cosmetic.brand.name.toLocaleUpperCase()}
                             </h4>
                             <h3 className="line-clamp-2 h-[48px] w-full font-semibold">
-                            CoverBlur Powder Foundation Natural
+                            {cosmetic.name}
                             </h3>
                             <strong className="font-semibold text-cosmetics-pink">
-                            Rp 8.540.000
+                            {formatCurrency(cosmetic.price)}
                             </strong>
                         </div>
                         </div>
                     </div>
                     </a>
                 </SwiperSlide>
-                <SwiperSlide className="swiper-slide !w-fit">
-                    <a href="details.html">
-                    <div className="relative flex h-[276px] w-[222px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                        <div className="flex h-full flex-col justify-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-                        <span className="absolute right-[14px] top-[14px] flex items-center justify-center gap-[2px] rounded-full bg-cosmetics-purple px-2 py-[6px]">
-                            <img
-                            src="/assets/images/icons/star.svg"
-                            alt="icon"
-                            className="size-4 shrink-0"
-                            />
-                            <p className="text-xs font-bold leading-[18px] text-white">
-                            4.8
-                            </p>
-                        </span>
-                        <div className="mx-auto flex h-[130px] w-full items-center justify-center">
-                            <img
-                            src="/assets/images/thumbnails/lipstick.png"
-                            alt="image"
-                            className="h-full w-full object-contain"
-                            />
-                        </div>
-                        <div className="des flex flex-col gap-1">
-                            <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                            MAYBELLINA
-                            </h4>
-                            <h3 className="line-clamp-2 h-[48px] w-full font-semibold">
-                            Lipstick Golden Ultra Alami Lebih Basah
-                            </h3>
-                            <strong className="font-semibold text-cosmetics-pink">
-                            Rp 8.540.000
-                            </strong>
-                        </div>
-                        </div>
-                    </div>
-                    </a>
-                </SwiperSlide>
-                <SwiperSlide className="swiper-slide !w-fit">
-                    <a href="details.html">
-                    <div className="relative flex h-[276px] w-[222px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                        <div className="flex h-full flex-col justify-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-                        <span className="absolute right-[14px] top-[14px] flex items-center justify-center gap-[2px] rounded-full bg-cosmetics-purple px-2 py-[6px]">
-                            <img
-                            src="/assets/images/icons/star.svg"
-                            alt="icon"
-                            className="size-4 shrink-0"
-                            />
-                            <p className="text-xs font-bold leading-[18px] text-white">
-                            4.8
-                            </p>
-                        </span>
-                        <div className="mx-auto flex h-[130px] w-full items-center justify-center overflow-hidden">
-                            <img
-                            src="/assets/images/thumbnails/deodorant.png"
-                            alt="image"
-                            className="h-full w-full object-contain"
-                            />
-                        </div>
-                        <div className="des flex flex-col gap-1">
-                            <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                            NIVEA
-                            </h4>
-                            <h3 className="line-clamp-2 h-[48px] w-full font-semibold">
-                            Deodorant Alami Anti Lembab Seharian
-                            </h3>
-                            <strong className="font-semibold text-cosmetics-pink">
-                            Rp 8.540.000
-                            </strong>
-                        </div>
-                        </div>
-                    </div>
-                    </a>
-                </SwiperSlide>
-                <SwiperSlide className="swiper-slide !w-fit">
-                    <a href="details.html">
-                    <div className="relative flex h-[276px] w-[220px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                        <div className="flex h-full flex-col justify-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-                        <span className="absolute right-[14px] top-[14px] flex items-center justify-center gap-[2px] rounded-full bg-cosmetics-purple px-2 py-[6px]">
-                            <img
-                            src="/assets/images/icons/star.svg"
-                            alt="icon"
-                            className="size-4 shrink-0"
-                            />
-                            <p className="text-xs font-bold leading-[18px] text-white">
-                            4.8
-                            </p>
-                        </span>
-                        <div className="mx-auto flex h-[130px] w-full items-center justify-center overflow-hidden">
-                            <img
-                            src="/assets/images/thumbnails/mascara.png"
-                            alt="image"
-                            className="h-full w-full object-contain"
-                            />
-                        </div>
-                        <div className="des flex flex-col gap-1">
-                            <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                            MAYBELLINA
-                            </h4>
-                            <h3 className="line-clamp-2 h-[48px] w-full font-semibold">
-                            Mascara Pinky Pilihan Arti Terkenal Cantik
-                            </h3>
-                            <strong className="font-semibold text-cosmetics-pink">
-                            Rp 8.540.000
-                            </strong>
-                        </div>
-                        </div>
-                    </div>
-                    </a>
-                </SwiperSlide>
+                ))
+            ) : (
+                <p>Belum ada data popular cosmetic</p>
+            )}
+
             </Swiper>
             </div>
             </div>
@@ -486,26 +310,29 @@ export default function BrowsePage(){
         <section id="FreshThisSummer">
             <div className="flex flex-col gap-4 px-5">
             <h2 className="font-bold">Fresh This Summer</h2>
+                {allCosmetics.length > 0 ? (
+                allCosmetics.map((cosmetic) => (
+                
             <a href="details.html">
                 <div className="flex h-[130px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
                 <div className="flex h-full w-full items-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
                     <div className="flex size-[90px] shrink-0 items-center justify-center">
                     <img
-                        src="/assets/images/thumbnails/acne.png"
+                        src={`${BASE_URL}/${cosmetic.thumbnail}`}
                         alt="image"
                         className="h-full w-full object-contain"
                     />
                     </div>
                     <div className="flex w-full flex-col gap-[2px]">
                     <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                        MAYBELINA
+                        {cosmetic.brand.name.toLocaleUpperCase()}
                     </h4>
                     <h3 className="line-clamp-2 h-[48px] w-full font-semibold">
-                        Acne Patch Tidak Sakit
+                        {cosmetic.name}
                     </h3>
                     <div className="flex items-center justify-between">
                         <strong className="font-semibold text-cosmetics-pink">
-                        Rp 8.540.000
+                        {formatCurrency(cosmetic.price)}
                         </strong>
                         <div className="flex items-center justify-center gap-[2px]">
                         <img
@@ -520,74 +347,11 @@ export default function BrowsePage(){
                 </div>
                 </div>
             </a>
-            <a href="details.html">
-                <div className="flex h-[130px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                <div className="flex h-full w-full items-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-                    <div className="flex size-[90px] shrink-0 items-center justify-center">
-                    <img
-                        src="/assets/images/thumbnails/bedak.png"
-                        alt="image"
-                        className="h-full w-full object-contain"
-                    />
-                    </div>
-                    <div className="flex w-full flex-col gap-[2px]">
-                    <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                        SOMETHINK
-                    </h4>
-                    <h3 className="line-clamp-2 h-[48px] w-full font-semibold">
-                        Bedak Halus Penghilang Jerawat Tanpa Effect
-                    </h3>
-                    <div className="flex items-center justify-between">
-                        <strong className="font-semibold text-cosmetics-pink">
-                        Rp 8.540.000
-                        </strong>
-                        <div className="flex items-center justify-center gap-[2px]">
-                        <img
-                            src="/assets/images/icons/star.svg"
-                            alt="icon"
-                            className="size-4 shrink-0"
-                        />
-                        <p className="text-xs font-bold leading-[18px]">4.8</p>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </a>
-            <a href="details.html">
-                <div className="flex h-[130px] items-center justify-center rounded-3xl bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]">
-                <div className="flex h-full w-full items-center gap-4 rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-                    <div className="flex size-[90px] shrink-0 items-center justify-center">
-                    <img
-                        src="/assets/images/thumbnails/acne-patch.png"
-                        alt="image"
-                        className="h-full w-full object-contain"
-                    />
-                    </div>
-                    <div className="flex w-full flex-col gap-[2px]">
-                    <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                        MAYBELINA
-                    </h4>
-                    <h3 className="line-clamp-2 h-[48px] w-full font-semibold">
-                        Acne Patch Tidak Sakit
-                    </h3>
-                    <div className="flex items-center justify-between">
-                        <strong className="font-semibold text-cosmetics-pink">
-                        Rp 8.540.000
-                        </strong>
-                        <div className="flex items-center justify-center gap-[2px]">
-                        <img
-                            src="/assets/images/icons/star.svg"
-                            alt="icon"
-                            className="size-4 shrink-0"
-                        />
-                        <p className="text-xs font-bold leading-[18px]">4.8</p>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </a>
+                ))
+            ) : (
+                <p>Belum ada data popular cosmetic</p>
+            )}
+
             </div>
         </section>
         <nav className="fixed bottom-0 left-0 right-0 z-30 mx-auto w-full">
