@@ -53,7 +53,7 @@ class CategoryController extends Controller
     {
         // Muat relasi 'cosmetics' dan 'popularCosmetics'
         // agar data produk terkait kategori langsung tersedia
-        $category->load(['cosmetics', 'popularCosmetics']);
+        $category->load(['cosmetics', 'popularCosmetics', 'cosmetics.brand']);
 
         // Tambahkan hitungan jumlah kosmetik (cosmetics_count)
         $category->loadCount(['cosmetics']);
