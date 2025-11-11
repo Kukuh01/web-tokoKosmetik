@@ -162,7 +162,7 @@ export default function CategoryPage(){
             {category.cosmetics.length > 0 ? (
                 category.cosmetics.map((cosmetic) => (
                 
-                <a href="details.html" key={cosmetic.id}>
+                <Link to={`/cosmetic/${cosmetic.slug}`} key={cosmetic.id}>
                     <div className="flex h-[130px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink">
                     <div className="flex h-full w-full hover:h-[calc(100%_-_4px)] hover:w-[calc(100%_-_4px)] transtion-all duration-300 gap-4 rounded-[23px] hover:rounded-[22px] items-center bg-white px-4">
                         <div className="flex size-[90px] shrink-0 items-center justify-center">
@@ -195,7 +195,7 @@ export default function CategoryPage(){
                         </div>
                     </div>
                     </div>
-                </a>
+                </Link>
                 ))
             ) : (
                 <p>Belum ada data category</p>
