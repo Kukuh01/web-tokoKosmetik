@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom"
 import { CartItem, Cosmetic } from "../types/type"
 import { useEffect, useState } from "react";
 import apiClient from "../services/apiServices";
+import {Swiper, SwiperSlide} from "swiper/react"
 
 export default function DetailsPage() {
 
@@ -51,6 +52,15 @@ export default function DetailsPage() {
     if (!cosmetic){
         return <p>cosmetic not found</p>
     }
+
+    // Format currency to IDR
+    const formatCurrency = (value: number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+        }).format(value);
+    };
 
     return (
 <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-[#F6F6F8]">
@@ -145,7 +155,8 @@ export default function DetailsPage() {
           </div>
         </div>
       </section>
-      <section id="Ads">
+      {cosmetic.is_popular ? (
+        <section id="Ads">
         <div className="px-5">
           <div className="relative flex items-center gap-[10px] rounded-[20px] bg-[linear-gradient(87deg,_#360CAC_16.85%,_#FF4D9F_81.08%)] px-5 py-[19px]">
             <img
@@ -164,12 +175,16 @@ export default function DetailsPage() {
           </div>
         </div>
       </section>
+      ) : ''}
+
       <header>
         <div className="flex items-center justify-between px-5">
           <div className="flex flex-col gap-1">
-            <h4 className="font-semibold text-cosmetics-purple">SOOMETHINK</h4>
+            <h4 className="font-semibold text-cosmetics-purple">
+              {cosmetic.brand.name.toUpperCase()}
+            </h4>
             <h1 className="text-[20px] font-bold leading-[30px]">
-              CoverBlur Powder Foundation Natural
+              {cosmetic.name}
             </h1>
           </div>
           <div className="rounded-[16px] bg-cosmetics-purple px-[12px] py-2">
@@ -192,7 +207,7 @@ export default function DetailsPage() {
             />
             <div>
               <h5 className="text-sm font-semibold leading-[21px] text-[#030504]">
-                Foundation
+                {cosmetic.category.name}
               </h5>
               <p className="text-sm leading-[21px] text-[#43484C]">Category</p>
             </div>
@@ -246,16 +261,23 @@ export default function DetailsPage() {
         <div className="flex flex-col gap-2 px-5">
           <h3 className="font-bold">About Product</h3>
           <p className="leading-[28px]">
-            Cushion dengan kandungan skincare dan coverage tinggi namun terasa
-            puff normal dengan bentuk unik setiap sudut areanya wajah lebih
-            mudah dan merata lorem.
+            {cosmetic.about}
           </p>
         </div>
       </section>
       <section id="Reviews">
         <div id="ReviewsSlider" className="swiper w-full overflow-x-hidden">
-          <div className="swiper-wrapper">
-            <div className="swiper-slide !w-fit">
+        <Swiper
+                className="swiper-wrapper"
+                direction="horizontal"
+                spaceBetween={16}
+                slidesPerView="auto"
+                slidesOffsetAfter={20}
+                slidesOffsetBefore={20}
+        >
+            {cosmetic.cosmetic_testimonials.length > 0 ? (
+                cosmetic.cosmetic_testimonials.map((testimonial) => (
+            <SwiperSlide className="swiper-slide !w-fit">
               <div className="relative flex w-[330px] flex-col gap-4 rounded-3xl bg-white p-[20px]">
                 <img
                   src="/assets/images/icons/coma.svg"
@@ -263,22 +285,21 @@ export default function DetailsPage() {
                   className="absolute left-[17px] top-[16px]"
                 />
                 <p className="relative leading-[28px] text-[#030504]">
-                  Perawatan jadi lebih mudah dan murah untuk saya yang lorem
-                  tidak punya waktu dan biaya skincare.
+                  {testimonial.message}
                 </p>
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center gap-[12px]">
                     <div className="flex size-[48px] shrink-0 items-center justify-center overflow-hidden rounded-full">
                       <img
-                        src="/assets/images/photos/people1.png"
+                        src={`${BASE_URL}/${testimonial.photo}`}
                         alt="image"
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <div>
-                      <h5 className="font-semibold text-[#030504]">Sahina</h5>
+                      <h5 className="font-semibold text-[#030504]">{testimonial.name}</h5>
                       <p className="text-sm leading-[21px] text-cosmetics-grey">
-                        4.8/5
+                        {testimonial.rating}/5
                       </p>
                     </div>
                   </div>
@@ -311,161 +332,38 @@ export default function DetailsPage() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="swiper-slide !w-fit">
-              <div className="relative flex w-[330px] flex-col gap-4 rounded-3xl bg-white p-[20px]">
-                <img
-                  src="/assets/images/icons/coma.svg"
-                  alt="icon"
-                  className="absolute left-[17px] top-[16px]"
-                />
-                <p className="relative leading-[28px] text-[#030504]">
-                  Perawatan jadi lebih mudah dan murah untuk saya yang lorem
-                  tidak punya waktu dan biaya skincare.
-                </p>
-                <div className="relative flex items-center justify-between">
-                  <div className="flex items-center gap-[12px]">
-                    <div className="flex size-[48px] shrink-0 items-center justify-center overflow-hidden rounded-full">
-                      <img
-                        src="/assets/images/photos/people2.png"
-                        alt="image"
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h5 className="font-semibold text-[#030504]">
-                        Masayoshi
-                      </h5>
-                      <p className="text-sm leading-[21px] text-cosmetics-grey">
-                        4.8/5
-                      </p>
-                    </div>
-                  </div>
-                  <div className="stars flex items-center">
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="swiper-slide !w-fit">
-              <div className="relative flex w-[330px] flex-col gap-4 rounded-3xl bg-white p-[20px]">
-                <img
-                  src="/assets/images/icons/coma.svg"
-                  alt="icon"
-                  className="absolute left-[17px] top-[16px]"
-                />
-                <p className="relative leading-[28px] text-[#030504]">
-                  Perawatan jadi lebih mudah dan murah untuk saya yang lorem
-                  tidak punya waktu dan biaya skincare.
-                </p>
-                <div className="relative flex items-center justify-between">
-                  <div className="flex items-center gap-[12px]">
-                    <div className="flex size-[48px] shrink-0 items-center justify-center overflow-hidden rounded-full">
-                      <img
-                        src="/assets/images/photos/people1.png"
-                        alt="image"
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h5 className="font-semibold text-[#030504]">Sahina</h5>
-                      <p className="text-sm leading-[21px] text-cosmetics-grey">
-                        4.8/5
-                      </p>
-                    </div>
-                  </div>
-                  <div className="stars flex items-center">
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                    <img
-                      src="/assets/images/icons/star-big.svg"
-                      alt="icon"
-                      className="size-[20px] shrink-0"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            </SwiperSlide>
+                ))
+            ) : (
+                <p>Belum ada data testimonial</p>
+            )}
+        </Swiper>
+
+          
         </div>
       </section>
       <section id="NaturalBenefits">
         <div className="flex flex-col gap-[14px] px-5 pb-[125px]">
           <h3 className="font-bold">Natural Benefits</h3>
-          <div className="flex items-center gap-3">
+{(cosmetic?.cosmetic_benefits?.length ?? 0) > 0 ? (
+    cosmetic.cosmetic_benefits.map((benefit) => (
+      <div className="flex flex-col gap-3" >
+        <div className="flex items-center gap-3" key={benefit.id}>
             <img
-              src="/assets/images/icons/benefit.svg"
-              alt="icon"
-              className="size-[32px] shrink-0"
+                src="/assets/images/icons/benefit.svg"
+                alt="icon"
+                className="size-[32px] shrink-0"
             />
-            <p className="leading-[28px]">
-              Kandungan tanpa tambahan toxic sehingga aman untuk jenis wajahmu
-            </p>
-          </div>
-          <hr className="border-[#E3E3E4]" />
-          <div className="flex items-center gap-3">
-            <img
-              src="/assets/images/icons/benefit.svg"
-              alt="icon"
-              className="size-[32px] shrink-0"
-            />
-            <p className="leading-[28px]">
-              Tanpa pengawet dan bahan alami demi kesehatan gel dan body skins
-            </p>
-          </div>
-          <hr className="border-[#E3E3E4]" />
-          <div className="flex items-center gap-3">
-            <img
-              src="/assets/images/icons/benefit.svg"
-              alt="icon"
-              className="size-[32px] shrink-0"
-            />
-            <p className="leading-[28px]">
-              Kandungan tanpa tambahan toxic sehingga aman untuk jenis wajahmu
-            </p>
-          </div>
+            <p className="leading-[28px]">{benefit.name}</p>
+        </div>
+        <hr className="border-[#E3E3E4]"/>
+        </div>
+    ))
+) : (
+    <p>Belum ada data category</p>
+)}
+
+
         </div>
       </section>
     </div>
@@ -473,7 +371,7 @@ export default function DetailsPage() {
       <div className="relative mx-auto flex max-w-[640px] items-center gap-[55px] bg-white p-5">
         <div className="flex flex-col gap-1 text-start">
           <strong className="whitespace-nowrap text-xl font-bold leading-[30px]">
-            Rp 2.560.493
+            {formatCurrency(cosmetic.price)}
           </strong>
           <p className="text-sm leading-[21px] text-cosmetics-grey">
             /quantity

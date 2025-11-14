@@ -26,9 +26,9 @@ export interface Cosmetic {
     category: Category,
     brand: Brand,
     thumbnail: string,
-    benefits: Benefit[], //di kasih [] karena di anggap collection/array karena satu cosmetic banyak benefit
-    photos: Photo[],
-    testimonials: Testimonial[],
+    cosmetic_benefits: Benefit[], //di kasih [] karena di anggap collection/array karena satu cosmetic banyak benefit
+    cosmetic_photos: Photo[],
+    cosmetic_testimonials: Testimonial[],
     about: string,
 }
 
