@@ -93,7 +93,7 @@ export default function BrowsePage(){
     return(
         <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-white pb-[141px]">
         <section id="Info">
-            <div className="mt-5 flex items-center justify-between px-5">
+            <div className="flex items-center justify-between px-5 mt-5">
             <div className="language flex h-[32px] items-center gap-[10px]">
                 <button type="button" className="indo flex items-center gap-[6px]">
                 <img
@@ -103,7 +103,7 @@ export default function BrowsePage(){
                 />
                 <p className="text-xs font-semibold leading-[18px]">ID</p>
                 </button>
-                <span className="block h-full w-px bg-cosmetics-greylight" />
+                <span className="block w-px h-full bg-cosmetics-greylight" />
                 <button type="button" className="jpn flex items-center gap-[6px]">
                 <img
                     src="/assets/images/icons/jp.svg"
@@ -139,7 +139,7 @@ export default function BrowsePage(){
                 href=""
                 className="flex size-[44px] items-center justify-center rounded-full bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]"
                 >
-                <div className="flex h-full w-full shrink-0 items-center justify-center rounded-full bg-white">
+                <div className="flex items-center justify-center w-full h-full bg-white rounded-full shrink-0">
                     <img
                     src="/assets/images/icons/search.svg"
                     alt="icon"
@@ -147,23 +147,22 @@ export default function BrowsePage(){
                     />
                 </div>
                 </a>
-                <a
-                href="my-cart.html"
+                <Link to={'/cart'}
                 className="flex size-[44px] items-center justify-center rounded-full bg-cosmetics-greylight p-px transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]"
                 >
-                <div className="flex h-full w-full shrink-0 items-center justify-center rounded-full bg-white">
+                <div className="flex items-center justify-center w-full h-full bg-white rounded-full shrink-0">
                     <img
                     src="/assets/images/icons/cart.svg"
                     alt="icon"
                     className="size-5 shrink-0"
                     />
                 </div>
-                </a>
+                </Link>
             </div>
             </div>
         </section>
         <section id="Hero">
-            {/* <div id="HeroSlider" className="swiper w-full overflow-x-hidden"> */}
+            {/* <div id="HeroSlider" className="w-full overflow-x-hidden swiper"> */}
             <div className="swiper-wrapper">
                 <Swiper
                     className="swiper-wrapper"
@@ -179,7 +178,7 @@ export default function BrowsePage(){
                     <img
                         src="/assets/images/thumbnails/girls-day.png"
                         alt="image"
-                        className="h-full w-full object-cover"
+                        className="object-cover w-full h-full"
                     />
                     </div>
                 </a>
@@ -190,7 +189,7 @@ export default function BrowsePage(){
                     <img
                         src="/assets/images/thumbnails/beuty-tips.png"
                         alt="image"
-                        className="h-full w-full object-cover"
+                        className="object-cover w-full h-full"
                     />
                     </div>
                 </a>
@@ -201,7 +200,7 @@ export default function BrowsePage(){
                     <img
                         src="/assets/images/thumbnails/discount-for.png"
                         alt="image"
-                        className="h-full w-full object-cover"
+                        className="object-cover w-full h-full"
                     />
                     </div>
                 </a>
@@ -212,7 +211,7 @@ export default function BrowsePage(){
         <section id="TopCategories">
             <div className="flex flex-col gap-4 px-5">
             <h2 className="font-bold">Top Categories</h2>
-            <div className="categories-cards grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4 categories-cards">
 
             {categories.length > 0 ? (
                 categories.map((category) => (
@@ -224,7 +223,7 @@ export default function BrowsePage(){
                         <img
                         src={`${BASE_URL}/${category.photo}`}
                         alt="image"
-                        className="h-full w-full object-cover"
+                        className="object-cover w-full h-full"
                         />
                     </div>
                     <h3 className="mb-[2px] text-center text-sm font-semibold leading-[21px]">
@@ -249,7 +248,7 @@ export default function BrowsePage(){
             <h2 className="px-5 font-bold">Popular Choices</h2>
             <div
                 id="PopularChoicesSlider"
-                className="swiper w-full overflow-x-hidden"
+                className="w-full overflow-x-hidden swiper"
             >
                 <Swiper
                 className="swiper-wrapper"
@@ -281,10 +280,10 @@ export default function BrowsePage(){
                             <img
                             src={`${BASE_URL}/${cosmetic.thumbnail}`}
                             alt="image"
-                            className="h-full w-full object-contain"
+                            className="object-contain w-full h-full"
                             />
                         </div>
-                        <div className="des flex flex-col gap-1">
+                        <div className="flex flex-col gap-1 des">
                             <h4 className="text-xs leading-[18px] text-cosmetics-purple">
                             {cosmetic.brand.name.toLocaleUpperCase()}
                             </h4>
@@ -321,7 +320,7 @@ export default function BrowsePage(){
                     <img
                         src={`${BASE_URL}/${cosmetic.thumbnail}`}
                         alt="image"
-                        className="h-full w-full object-contain"
+                        className="object-contain w-full h-full"
                     />
                     </div>
                     <div className="flex w-full flex-col gap-[2px]">
@@ -355,7 +354,7 @@ export default function BrowsePage(){
 
             </div>
         </section>
-        <nav className="fixed bottom-0 left-0 right-0 z-30 mx-auto w-full">
+        <nav className="fixed bottom-0 left-0 right-0 z-30 w-full mx-auto">
             <div className="mx-auto max-w-[640px]">
             <div className="h-[89px] bg-white px-[30px] shadow-[0px_-4px_30px_0px_#1107260D]">
                 <ul className="flex justify-between">

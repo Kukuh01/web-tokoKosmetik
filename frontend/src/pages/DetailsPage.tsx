@@ -41,6 +41,33 @@ export default function DetailsPage() {
             });
     }, [slug]);
 
+    const handleAddToCart = () => {
+      if (cosmetic) {
+        setIsAdding(true);
+        const itemExists = cart.find((item) => item.cosmetic_id === cosmetic.id);
+        if(itemExists){
+          alert("Produk sudah tersedia di dalam Cart");
+          setIsAdding(false);
+        }
+        else {
+          const newCartItem: CartItem = {
+            cosmetic_id: cosmetic.id,
+            slug: cosmetic.slug,
+            quantity: 1,
+          };
+
+          const updatedCart = [...cart, newCartItem];
+          setCart(updatedCart);
+
+          localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+          alert("Jasa berhasil ditambahkan ke Cart");
+          setIsAdding(false);
+
+        }
+      }
+    };
+
     if (loading){
         return <p>Loading...</p>
     }
@@ -84,7 +111,7 @@ export default function DetailsPage() {
             You deserve beauty life
           </p>
         </div>
-        <a href="my-cart.html">
+        <Link to={'/cart'}>
           <div className="flex size-[44px] shrink-0 items-center justify-center rounded-full border border-cosmetics-greylight">
             <img
               src="/assets/images/icons/cart.svg"
@@ -92,11 +119,11 @@ export default function DetailsPage() {
               className="size-5 shrink-0"
             />
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   </section>
-  <form action="my-cart.html">
+
     <div className="flex flex-col gap-5">
       <section id="HeroSlider" className="px-5">
         <div className="flex w-full flex-col items-center gap-[30px] rounded-[30px] bg-white px-[24.5px] py-[30px]">
@@ -126,7 +153,7 @@ export default function DetailsPage() {
             {cosmetic.cosmetic_photos.length > 0 ? (
               cosmetic.cosmetic_photos.map((photo) => (
 
-              <div className={`h-[72px] w-[72px] rounded-full
+              <div key={photo.id} className={`h-[72px] w-[72px] rounded-full
               ${mainImage === photo.photo ? "bg-cosmetics-gradient-purple-pink" : ""}
               p-[2px] transition-all duration-300`}>
               <div className="flex items-center justify-center w-full h-full bg-white rounded-full">
@@ -372,10 +399,11 @@ export default function DetailsPage() {
           </p>
         </div>
         <button
-          type="submit"
+          onClick={handleAddToCart}
+          disabled={isAdding}
           className="flex w-full items-center justify-center gap-[10px] rounded-full bg-cosmetics-gradient-pink-white py-[14px] transition-all duration-300 hover:shadow-[0px_6px_22px_0px_#FF4D9E82]"
         >
-          <p className="font-semibold text-white">Add to Cart</p>
+          <p className="font-semibold text-white">{isAdding ? "Adding..." : "Add to my cart"}</p>
           <img
             src="/assets/images/icons/cart-white.svg"
             alt="icon"
@@ -384,7 +412,7 @@ export default function DetailsPage() {
         </button>
       </div>
     </nav>
-  </form>
+
 </main>
     )
 }

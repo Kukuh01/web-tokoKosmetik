@@ -49,8 +49,8 @@ export default function CategoryPage(){
 
     return (
     <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-[#F6F6F8] pb-[102px]">
-    <section id="NavTop" className="mt-5 px-5">
-        <div className="flex w-full flex-col gap-5 rounded-3xl bg-white px-3 pb-5 pt-3">
+    <section id="NavTop" className="px-5 mt-5">
+        <div className="flex flex-col w-full gap-5 px-3 pt-3 pb-5 bg-white rounded-3xl">
         <div className="flex items-center justify-between">
             <Link to={'/'}>
                 <div className="flex size-[44px] shrink-0 items-center justify-center rounded-full border border-cosmetics-greylight">
@@ -69,7 +69,7 @@ export default function CategoryPage(){
                 You deserve beauty life
             </p>
             </div>
-            <a href="my-cart.html">
+            <Link to={'/cart'}>
             <div className="flex size-[44px] shrink-0 items-center justify-center rounded-full border border-cosmetics-greylight">
                 <img
                 src="/assets/images/icons/cart.svg"
@@ -77,7 +77,7 @@ export default function CategoryPage(){
                 className="size-5 shrink-0"
                 />
             </div>
-            </a>
+            </Link>
         </div>
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -85,7 +85,7 @@ export default function CategoryPage(){
                 <img
                 src={`${BASE_URL}/${category.photo}`}
                 alt="image"
-                className="h-full w-full object-cover"
+                className="object-cover w-full h-full"
                 />
             </div>
             <div className="flex flex-col gap-1">
@@ -95,7 +95,7 @@ export default function CategoryPage(){
                 </p>
             </div>
             </div>
-            <div className="stars flex items-center">
+            <div className="flex items-center stars">
             <img
                 src="/assets/images/icons/star-big.svg"
                 alt="icon"
@@ -169,7 +169,7 @@ export default function CategoryPage(){
                         <img
                             src={`${BASE_URL}/${cosmetic.thumbnail}`}
                             alt="image"
-                            className="h-full w-full object-contain"
+                            className="object-contain w-full h-full"
                         />
                         </div>
                         <div className="flex w-full flex-col gap-[2px]">
@@ -203,7 +203,7 @@ export default function CategoryPage(){
 
         </div>
     </section>
-    <nav className="fixed bottom-5 left-0 right-0 z-30 mx-auto w-full">
+    <nav className="fixed left-0 right-0 z-30 w-full mx-auto bottom-5">
         <div className="mx-auto max-w-[640px]">
         <button
             type="button"
