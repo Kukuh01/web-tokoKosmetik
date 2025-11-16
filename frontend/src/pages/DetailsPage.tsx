@@ -65,8 +65,8 @@ export default function DetailsPage() {
     return (
 <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-[#F6F6F8]">
   <section id="NavTop">
-    <div className="relative mt-5 px-5">
-      <div className="flex w-full items-center justify-between rounded-3xl bg-white px-3 py-3">
+    <div className="relative px-5 mt-5">
+      <div className="flex items-center justify-between w-full px-3 py-3 bg-white rounded-3xl">
         <Link to={'/'}>
           <div className="flex size-[44px] shrink-0 items-center justify-center rounded-full border border-cosmetics-greylight">
             <img
@@ -102,56 +102,50 @@ export default function DetailsPage() {
         <div className="flex w-full flex-col items-center gap-[30px] rounded-[30px] bg-white px-[24.5px] py-[30px]">
           <div className="flex size-[250px] shrink-0 items-center justify-center">
             <img
-              src="/assets/images/thumbnails/thumb1-big.png"
+              src={`${BASE_URL}/${mainImage}`} 
               alt="image"
-              className="h-full w-full object-contain"
+              className="object-contain w-full h-full"
             />
           </div>
           <div className="flex items-center justify-center gap-[4px]">
-            <div className="h-[72px] w-[72px] rounded-full bg-cosmetics-gradient-purple-pink p-[2px] transition-all duration-300">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
+            <div className={`h-[72px] w-[72px] rounded-full
+              ${mainImage === cosmetic.thumbnail ? "bg-cosmetics-gradient-purple-pink" : ""}
+              p-[2px] transition-all duration-300`}>
+              <div className="flex items-center justify-center w-full h-full bg-white rounded-full">
                 <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full">
                   <img
-                    src="/assets/images/thumbnails/thumb1.png"
+                    src={`${BASE_URL}/${cosmetic.thumbnail}`} 
                     alt="image"
                     className="size-[45px]"
+                    onClick={() => setMainImage(cosmetic.thumbnail)}
                   />
                 </div>
               </div>
             </div>
-            <div className="h-[72px] w-[72px] rounded-full bg-cosmetics-gradient-purple-pink p-[2px] transition-all duration-300">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
+
+            {cosmetic.cosmetic_photos.length > 0 ? (
+              cosmetic.cosmetic_photos.map((photo) => (
+
+              <div className={`h-[72px] w-[72px] rounded-full
+              ${mainImage === photo.photo ? "bg-cosmetics-gradient-purple-pink" : ""}
+              p-[2px] transition-all duration-300`}>
+              <div className="flex items-center justify-center w-full h-full bg-white rounded-full">
                 <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full">
                   <img
-                    src="/assets/images/thumbnails/thumb2.png"
+                    src={`${BASE_URL}/${photo.photo}`}  
                     alt="image"
                     className="size-[45px]"
+                    onClick={() => setMainImage(photo.photo)}
                   />
                 </div>
               </div>
             </div>
-            <div className="h-[72px] w-[72px] rounded-full bg-cosmetics-gradient-purple-pink p-[2px] transition-all duration-300">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
-                <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full">
-                  <img
-                    src="/assets/images/thumbnails/thumb3.png"
-                    alt="image"
-                    className="size-[45px]"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="h-[72px] w-[72px] rounded-full bg-cosmetics-gradient-purple-pink p-[2px] transition-all duration-300">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
-                <div className="flex h-[60px] w-[60px] items-center justify-center overflow-hidden rounded-full">
-                  <img
-                    src="/assets/images/thumbnails/thumb4.png"
-                    alt="image"
-                    className="size-[45px]"
-                  />
-                </div>
-              </div>
-            </div>
+            
+            ))) : (
+                <p>Data photo cosmetic tidak ada</p>
+              )}
+
+            
           </div>
         </div>
       </section>
@@ -266,7 +260,7 @@ export default function DetailsPage() {
         </div>
       </section>
       <section id="Reviews">
-        <div id="ReviewsSlider" className="swiper w-full overflow-x-hidden">
+        <div id="ReviewsSlider" className="w-full overflow-x-hidden swiper">
         <Swiper
                 className="swiper-wrapper"
                 direction="horizontal"
@@ -293,7 +287,7 @@ export default function DetailsPage() {
                       <img
                         src={`${BASE_URL}/${testimonial.photo}`}
                         alt="image"
-                        className="h-full w-full object-cover"
+                        className="object-cover w-full h-full"
                       />
                     </div>
                     <div>
@@ -303,7 +297,7 @@ export default function DetailsPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="stars flex items-center">
+                  <div className="flex items-center stars">
                     <img
                       src="/assets/images/icons/star-big.svg"
                       alt="icon"
