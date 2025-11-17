@@ -1,12 +1,33 @@
 import { useEffect, useState } from "react"
 import type { CartItem, Cosmetic } from "../types/type"
 import apiClient from "../services/apiServices";
+import { Link, useParams } from "react-router-dom";
 
 export default function MyCartPage(){
     const [cosmeticDetails, setCosmeticDetails] = useState<Cosmetic[]>([]);
     const [cart, setCart] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const BASE_URL = import.meta.env.VITE_REACT_API_STORAGE_URL;
+
+    const formatCurrency = (value: number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+        }).format(value);
+    };
+
+    const subtotal = cosmeticDetails.reduce((acc, cosmetic) => {
+      const cartItem = cart.find((item) => item.cosmetic_id === cosmetic.id);
+      return acc + (cartItem ? cosmetic.price * cartItem.quantity : 0);
+    }, 0);
+
+    const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+    const tax = subtotal * 0.11;
+    const total = subtotal + tax;
 
     // mengambil seluruh data dari keranjang
     // periksa kepada database apakah ada datanya
@@ -24,7 +45,7 @@ export default function MyCartPage(){
           for (const item of cartItems){
             try {
               
-              const response = await apiClient.get(`/cosmetics/${item.slug}`);
+              const response = await apiClient.get(`/cosmetic/${item.slug}`);
               const cosmetic = response.data.data;
 
               if(cosmetic){
@@ -71,7 +92,7 @@ export default function MyCartPage(){
   <section id="NavTop">
     <div className="px-5">
       <div className="relative w-full py-3 mt-5 bg-white rounded-3xl">
-        <a href="index.html">
+        <Link to={`/`}>
           <div className="absolute left-3 top-1/2 flex size-[44px] shrink-0 -translate-y-1/2 items-center justify-center rounded-full border border-cosmetics-greylight">
             <img
               src="/assets/images/icons/left.svg"
@@ -79,7 +100,7 @@ export default function MyCartPage(){
               className="size-5 shrink-0"
             />
           </div>
-        </a>
+        </Link>
         <div className="flex flex-col gap-[2px]">
           <h1 className="text-center text-lg font-bold leading-[27px]">
             My Cart
@@ -94,186 +115,77 @@ export default function MyCartPage(){
   <div className="flex flex-col gap-[40px]">
     <section id="ListItems">
       <div className="flex flex-col gap-[16px] px-5">
-        <div
-          id="Item"
-          className="flex h-[143px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]"
-        >
-          <div className="flex h-full w-full flex-col justify-center gap-[12px] rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex size-[60px] shrink-0 items-center justify-center">
-                  <img
-                    src="/assets/images/thumbnails/lipstick.png"
-                    alt="image"
-                    className="object-contain w-full h-full"
-                  />
+
+        {cosmeticDetails.map((cosmetic) => {
+          const cartItem = cart.find(
+            (item) => item.cosmetic_id === cosmetic.id
+          );
+          return (
+            
+          <div
+          key={cosmetic.id}
+            id="Item"
+            className="flex h-[143px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]"
+          >
+            <div className="flex h-full w-full flex-col justify-center gap-[12px] rounded-[23px] bg-white px-4 hover:rounded-[22px]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex size-[60px] shrink-0 items-center justify-center">
+                    <img
+                      src={`${BASE_URL}/${cosmetic.thumbnail}`}
+                      alt="image"
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-[6px]">
+                    <h4 className="text-xs leading-[18px] text-cosmetics-purple">
+                      {cosmetic.brand.name.toUpperCase()}
+                    </h4>
+                    <h3 className="line-clamp-2 h-[42px] w-full text-sm font-semibold leading-[21px]">
+                      {cosmetic.name}
+                    </h3>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-[6px]">
-                  <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                    MAYBELINA
-                  </h4>
-                  <h3 className="line-clamp-2 h-[42px] w-full text-sm font-semibold leading-[21px]">
-                    Lipstick Golden Pinky Oil Without Amet Dolor Sii
-                  </h3>
-                </div>
-              </div>
-              <button type="button" className="shrink-0">
-                <img
-                  src="/assets/images/icons/garbage.svg"
-                  alt="icon"
-                  className="size-5 shrink-0"
-                />
-              </button>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm leading-[21px] text-cosmetics-grey">
-                <strong className="text-sm font-semibold leading-[21px] text-cosmetics-pink">
-                  Rp 8.540.000
-                </strong>
-                /qty
-              </p>
-              <div className="flex w-[89px] items-center justify-between gap-1 rounded-full bg-[#F6F6F8] px-2 py-[6px]">
-                <button type="button">
-                  <img
-                    src="/assets/images/icons/min.svg"
-                    alt="icon"
-                    className="h-[21px] w-5 shrink-0"
-                  />
-                </button>
-                <p className="text-center text-sm font-semibold leading-[21px]">
-                  199
-                </p>
-                <button type="button">
-                  <img
-                    src="/assets/images/icons/plus.svg"
-                    alt="icon"
-                    className="h-[21px] w-5 shrink-0"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          id="Item"
-          className="flex h-[143px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]"
-        >
-          <div className="flex h-full w-full flex-col justify-center gap-[12px] rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex size-[60px] shrink-0 items-center justify-center">
-                  <img
-                    src="/assets/images/thumbnails/coverblur.png"
-                    alt="image"
-                    className="object-contain w-full h-full"
-                  />
-                </div>
-                <div className="flex flex-col gap-[6px]">
-                  <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                    SOOMETHINK
-                  </h4>
-                  <h3 className="line-clamp-2 h-[42px] w-full text-sm font-semibold leading-[21px]">
-                    Bedak Halus Anti Acnes
-                  </h3>
-                </div>
-              </div>
-              <button type="button" className="shrink-0">
-                <img
-                  src="/assets/images/icons/garbage.svg"
-                  alt="icon"
-                  className="size-5 shrink-0"
-                />
-              </button>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm leading-[21px] text-cosmetics-grey">
-                <strong className="text-sm font-semibold leading-[21px] text-cosmetics-pink">
-                  Rp 8.540.000
-                </strong>
-                /qty
-              </p>
-              <div className="flex w-[89px] items-center justify-between gap-1 rounded-full bg-[#F6F6F8] px-2 py-[6px]">
-                <button type="button">
-                  <img
-                    src="/assets/images/icons/min.svg"
-                    alt="icon"
-                    className="h-[21px] w-5 shrink-0"
-                  />
-                </button>
-                <p className="text-center text-sm font-semibold leading-[21px]">
-                  1
-                </p>
                 <button type="button" className="shrink-0">
                   <img
-                    src="/assets/images/icons/plus.svg"
+                    src="/assets/images/icons/garbage.svg"
                     alt="icon"
-                    className="h-[21px] w-5 shrink-0"
+                    className="size-5 shrink-0"
                   />
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          id="Item"
-          className="flex h-[143px] items-center justify-center rounded-3xl transition-all duration-300 hover:bg-cosmetics-gradient-purple-pink hover:p-[2px]"
-        >
-          <div className="flex h-full w-full flex-col justify-center gap-[12px] rounded-[23px] bg-white px-4 hover:rounded-[22px]">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex size-[60px] shrink-0 items-center justify-center">
-                  <img
-                    src="/assets/images/thumbnails/deodorant.png"
-                    alt="image"
-                    className="object-contain w-full h-full"
-                  />
-                </div>
-                <div className="flex flex-col gap-[6px]">
-                  <h4 className="text-xs leading-[18px] text-cosmetics-purple">
-                    MAYBELINA
-                  </h4>
-                  <h3 className="line-clamp-2 h-[42px] w-full text-sm font-semibold leading-[21px]">
-                    Lipstick Golden Pinky Oil Without Amet Dolor Sii
-                  </h3>
-                </div>
-              </div>
-              <button type="button" className="shrink-0">
-                <img
-                  src="/assets/images/icons/garbage.svg"
-                  alt="icon"
-                  className="size-5 shrink-0"
-                />
-              </button>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm leading-[21px] text-cosmetics-grey">
-                <strong className="text-sm font-semibold leading-[21px] text-cosmetics-pink">
-                  Rp 8.540.000
-                </strong>
-                /qty
-              </p>
-              <div className="flex w-[89px] items-center justify-between gap-1 rounded-full bg-[#F6F6F8] px-2 py-[6px]">
-                <button type="button">
-                  <img
-                    src="/assets/images/icons/min.svg"
-                    alt="icon"
-                    className="h-[21px] w-5 shrink-0"
-                  />
-                </button>
-                <p className="text-center text-sm font-semibold leading-[21px]">
-                  18
+              <div className="flex items-center justify-between">
+                <p className="text-sm leading-[21px] text-cosmetics-grey">
+                  <strong className="text-sm font-semibold leading-[21px] text-cosmetics-pink">
+                    {formatCurrency(cosmetic.price)}
+                  </strong>
+                  /qty
                 </p>
-                <button type="button">
-                  <img
-                    src="/assets/images/icons/plus.svg"
-                    alt="icon"
-                    className="h-[21px] w-5 shrink-0"
-                  />
-                </button>
+                <div className="flex w-[89px] items-center justify-between gap-1 rounded-full bg-[#F6F6F8] px-2 py-[6px]">
+                  <button type="button">
+                    <img
+                      src="/assets/images/icons/min.svg"
+                      alt="icon"
+                      className="h-[21px] w-5 shrink-0"
+                    />
+                  </button>
+                  <p className="text-center text-sm font-semibold leading-[21px]">
+                    {cartItem?.quantity || 1}
+                  </p>
+                  <button type="button">
+                    <img
+                      src="/assets/images/icons/plus.svg"
+                      alt="icon"
+                      className="h-[21px] w-5 shrink-0"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
         </div>
+
+          );
+        })}
       </div>
     </section>
     <section id="BookingDetails">
@@ -308,7 +220,7 @@ export default function MyCartPage(){
               />
               <p>Total Quantity</p>
             </div>
-            <strong className="font-semibold">198 Items</strong>
+            <strong className="font-semibold">{totalQuantity} Items</strong>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[6px]">
@@ -319,7 +231,7 @@ export default function MyCartPage(){
               />
               <p>Sub Total</p>
             </div>
-            <strong className="font-semibold">Rp 19.000.000</strong>
+            <strong className="font-semibold">{formatCurrency(subtotal)}</strong>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[6px]">
@@ -341,7 +253,7 @@ export default function MyCartPage(){
               />
               <p>Tax 11%</p>
             </div>
-            <strong className="font-semibold">Rp 8.380.391</strong>
+            <strong className="font-semibold">{formatCurrency(tax)}</strong>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[6px]">
@@ -353,7 +265,7 @@ export default function MyCartPage(){
               <p>Grand Total</p>
             </div>
             <strong className="text-[22px] font-bold leading-[33px] text-cosmetics-pink">
-              Rp 58.380.391
+              {formatCurrency(total)}
             </strong>
           </div>
           <button
