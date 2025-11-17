@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import type { CartItem, Cosmetic } from "../types/type"
 import apiClient from "../services/apiServices";
 import { Link, useParams } from "react-router-dom";
+import { set, string } from "zod";
 
 export default function MyCartPage(){
     const [cosmeticDetails, setCosmeticDetails] = useState<Cosmetic[]>([]);
@@ -28,6 +29,16 @@ export default function MyCartPage(){
 
     const tax = subtotal * 0.11;
     const total = subtotal + tax;
+
+    const handleRemoveItem = (slug: string) => {
+      const updatedCart = cart.filter((item) => item.slug !== slug);
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+      setCosmeticDetails((prevDetails) =>
+        prevDetails.filter((cosmetic) => cosmetic.slug !== slug)
+      );
+    };  
 
     // mengambil seluruh data dari keranjang
     // periksa kepada database apakah ada datanya
@@ -86,6 +97,14 @@ export default function MyCartPage(){
         setLoading(false);
       } 
     }, []);
+
+    if(loading){
+      return <p>Loading data..</p>
+    }
+
+    if(error){
+      return <p>Error loading data: {error}</p>
+    }
   
     return(
 <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-[#F6F6F8]">
@@ -146,7 +165,7 @@ export default function MyCartPage(){
                     </h3>
                   </div>
                 </div>
-                <button type="button" className="shrink-0">
+                <button className="shrink-0" onClick={() => handleRemoveItem(cosmetic.slug)}>
                   <img
                     src="/assets/images/icons/garbage.svg"
                     alt="icon"
