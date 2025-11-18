@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { BookingFormData, CartItem, Cosmetic } from "../types/type";
 import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+import apiClient from "../services/apiServices";
 
 // Define the type for the formData
 type FormData = {
@@ -25,6 +27,56 @@ export default function PaymentPage(){
     const [loading, setLoading] = useState(true);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const TAX_RATE = 0.11;
+    const navigate = useNavigate();
+
+    const fetchCosmeticDetails = async (cartItems: CartItem[]) => {
+        try {
+            const fetchedDetails = await Promise.all(
+                cartItems.map(async (item) => {
+                    const response = await apiClient.get(`/cosmetic/${item.slug}`);
+                    return response.data.data;
+                })
+            );
+
+            setCosmeticDetails(fetchedDetails);
+            setLoading(false);
+
+            const cosmeticIdsWithQuantities = cartItems.map((cartItem) => ({
+                id: cartItem.cosmetic_id,
+                quantity: cartItem.quantity,
+            }));
+
+            setFormData((prevData) => ({
+                ...prevData,
+                cosmetic_ids: cosmeticIdsWithQuantities,
+            }));
+
+        } catch (error) {
+            console.error("Error fetching cosmetic details:", error);
+            setError("Failed to fetch cosmetic details");
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const cartData = localStorage.getItem("cart");
+        const savedBookingData = localStorage.getItem("bookingData");
+
+        if(savedBookingData){
+            setBookingData(JSON.parse(savedBookingData) as BookingFormData);
+        }
+        if(!cartData || (cartData && JSON.parse(cartData).length === 0)){
+            navigate("/");
+            return;
+        }
+
+        const cartItems =JSON.parse(cartData) as CartItem[];
+        setCart(cartItems);
+        fetchCosmeticDetails(cartItems);
+    }, [navigate]);
+
 
     return (
 <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-[#F6F6F8] pb-[30px]">
