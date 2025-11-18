@@ -299,7 +299,7 @@ export default function DetailsPage() {
             {cosmetic.cosmetic_testimonials.length > 0 ? (
                 cosmetic.cosmetic_testimonials.map((testimonial) => (
             <SwiperSlide className="swiper-slide !w-fit">
-              <div className="relative flex w-[330px] flex-col gap-4 rounded-3xl bg-white p-[20px]">
+              <div className="relative flex w-[330px] flex-col gap-4 rounded-3xl bg-white p-[20px]" key={testimonial.id}>
                 <img
                   src="/assets/images/icons/coma.svg"
                   alt="icon"
@@ -368,8 +368,8 @@ export default function DetailsPage() {
           <h3 className="font-bold">Natural Benefits</h3>
 {(cosmetic?.cosmetic_benefits?.length ?? 0) > 0 ? (
     cosmetic.cosmetic_benefits.map((benefit) => (
-      <div className="flex flex-col gap-3" >
-        <div className="flex items-center gap-3" key={benefit.id}>
+      <div className="flex flex-col gap-3" key={benefit.id}>
+        <div className="flex items-center gap-3" >
             <img
                 src="/assets/images/icons/benefit.svg"
                 alt="icon"

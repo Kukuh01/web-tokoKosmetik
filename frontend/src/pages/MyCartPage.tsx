@@ -30,6 +30,7 @@ export default function MyCartPage(){
     const tax = subtotal * 0.11;
     const total = subtotal + tax;
 
+    // Handle remove item
     const handleRemoveItem = (slug: string) => {
       const updatedCart = cart.filter((item) => item.slug !== slug);
       setCart(updatedCart);
@@ -38,11 +39,36 @@ export default function MyCartPage(){
       setCosmeticDetails((prevDetails) =>
         prevDetails.filter((cosmetic) => cosmetic.slug !== slug)
       );
-    };  
+    };
+    
+    // Handle increasing quantity
+    const handleIncreaseQuantity = (slug: string) => {
+      setCart((prevCart) => {
+        const updatedCart = prevCart.map((item) =>
+          item.slug === slug && item.quantity < 10
+          ? { ...item, quantity: item.quantity + 1}
+          : item
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        return updatedCart;
+      });
+    };
+
+    // Handle decreasing quantity
+    const handleDecreaseQuantity = (slug: string) => {
+      setCart((prevCart) => {
+        const updatedCart = prevCart.map((item) =>
+          item.slug === slug && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1}
+          : item
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        return updatedCart;
+      });
+    };
 
     // mengambil seluruh data dari keranjang
     // periksa kepada database apakah ada datanya
-
     useEffect(() => {
       const savedCart = localStorage.getItem("cart");
       if(savedCart){
@@ -181,7 +207,7 @@ export default function MyCartPage(){
                   /qty
                 </p>
                 <div className="flex w-[89px] items-center justify-between gap-1 rounded-full bg-[#F6F6F8] px-2 py-[6px]">
-                  <button type="button">
+                  <button onClick={() => handleDecreaseQuantity(cosmetic.slug)}>
                     <img
                       src="/assets/images/icons/min.svg"
                       alt="icon"
@@ -191,7 +217,7 @@ export default function MyCartPage(){
                   <p className="text-center text-sm font-semibold leading-[21px]">
                     {cartItem?.quantity || 1}
                   </p>
-                  <button type="button">
+                  <button onClick={() => handleIncreaseQuantity(cosmetic.slug)}>
                     <img
                       src="/assets/images/icons/plus.svg"
                       alt="icon"
@@ -208,7 +234,6 @@ export default function MyCartPage(){
       </div>
     </section>
     <section id="BookingDetails">
-      <form action="booking.html">
         <div className="flex flex-col gap-5 rounded-t-[30px] bg-white px-5 pb-[30px] pt-[30px]">
           <h2 className="font-bold">Booking Details</h2>
           <div className="flex flex-col gap-[6px]">
@@ -287,8 +312,9 @@ export default function MyCartPage(){
               {formatCurrency(total)}
             </strong>
           </div>
-          <button
-            type="submit"
+
+          {cart.length !== 0 && (
+          <Link to={`/booking`}
             className="flex w-full items-center justify-between rounded-full bg-cosmetics-gradient-pink-white px-5 py-[14px] transition-all duration-300 hover:shadow-[0px_6px_22px_0px_#FF4D9E82]"
           >
             <strong className="font-semibold text-white">
@@ -299,9 +325,9 @@ export default function MyCartPage(){
               alt="icon"
               className="size-[24px] shrink-0"
             />
-          </button>
+          </Link>
+          )}
         </div>
-      </form>
     </section>
   </div>
 </main>
