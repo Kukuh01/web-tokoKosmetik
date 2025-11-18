@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { BookingFormData, CartItem, Cosmetic } from "../types/type";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../services/apiServices";
+import { paymentSchema } from "../types/validationBooking";
 
 // Define the type for the formData
 type FormData = {
@@ -28,6 +29,8 @@ export default function PaymentPage(){
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+    
     const TAX_RATE = 0.11;
     const navigate = useNavigate();
 
@@ -77,6 +80,76 @@ export default function PaymentPage(){
         fetchCosmeticDetails(cartItems);
     }, [navigate]);
 
+    const subtotal = cosmeticDetails.reduce((acc, cosmetic) => {
+      const cartItem = cart.find((item) => item.cosmetic_id === cosmetic.id);
+      return acc + (cartItem ? cosmetic.price * cartItem.quantity : 0);
+    }, 0);
+
+    const tax = subtotal * TAX_RATE;
+    const total = subtotal + tax;
+
+    // Handle file input changes
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        setFormData((prev) => ({
+            ...prev,
+            proof: file,
+        }));
+    };
+
+    // Handle submit
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const validation = paymentSchema.safeParse(formData);
+
+        if(!validation.success){
+            setFormErrors(validation.error.issues);
+            return;
+        }
+
+        setFormErrors([]);
+
+        const submissionData = new FormData();
+
+        if(formData.proof){
+            submissionData.append("proof", formData.proof);
+        }
+
+        if(bookingData){
+            submissionData.append("name", bookingData.name);
+            submissionData.append("email", bookingData.email);
+            submissionData.append("phone", bookingData.phone);
+            submissionData.append("address", bookingData.address);
+            submissionData.append("city", bookingData.city);
+            submissionData.append("post_code", bookingData.post_code);
+        }
+
+        formData.cosmetic_ids.forEach((item, index) => {
+            submissionData.append(`cosmetic_ids[${index}][id]`, String(item.id));
+            submissionData.append(
+                `cosmetic_ids[${index}][quantity]`,
+                String(item.quantity)  
+            );
+        });
+    };
+
+    // Format currency
+    const formatCurrency = (value: number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+        }).format(value);
+    };
+
+    if(loading){
+        return <p>Loading data...</p>
+    }
+
+    if(error){
+        return <p>Error loading data: {error}</p>
+    }
 
     return (
 <main className="mx-auto flex min-h-screen max-w-[640px] flex-col gap-5 bg-[#F6F6F8] pb-[30px]">
@@ -196,7 +269,7 @@ export default function PaymentPage(){
             />
             <p>Total Quantity</p>
           </div>
-          <strong className="font-semibold">198 Items</strong>
+          <strong className="font-semibold">{totalQuantity}</strong>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[6px]">
@@ -207,7 +280,7 @@ export default function PaymentPage(){
             />
             <p>Sub Total</p>
           </div>
-          <strong className="font-semibold">Rp 19.000.000</strong>
+          <strong className="font-semibold">{formatCurrency(subtotal)}</strong>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[6px]">
@@ -251,7 +324,7 @@ export default function PaymentPage(){
             />
             <p>Tax 11%</p>
           </div>
-          <strong className="font-semibold">Rp 8.380.391</strong>
+          <strong className="font-semibold">{formatCurrency(tax)}</strong>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[6px]">
@@ -263,7 +336,7 @@ export default function PaymentPage(){
             <p>Grand Total</p>
           </div>
           <strong className="text-[22px] font-bold leading-[33px] text-cosmetics-pink">
-            Rp 58.380.391
+            {formatCurrency(total)}
           </strong>
         </div>
       </div>
@@ -458,7 +531,7 @@ export default function PaymentPage(){
       </div>
     </div>
   </section>
-  <form action="booking-finished.html" className="flex flex-col gap-5 px-5">
+  <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-5">
     <section id="PaymentConfirmation">
       <div className="flex flex-col gap-5 rounded-3xl bg-white px-[14px] py-5">
         <div className="flex items-center gap-[10px]">

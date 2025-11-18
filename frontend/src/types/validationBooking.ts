@@ -9,7 +9,7 @@ export const bookingSchema = z.object({
     city: z.string().min(1, "City is required"),
 });
 
-export const paymenetSchema = z.object({
+export const paymentSchema = z.object({
     proof: z
         .instanceof(File)
         .refine((file) => file.size > 0, "Proof of payment is required"),
