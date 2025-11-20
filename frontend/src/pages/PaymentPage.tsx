@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { BookingFormData, CartItem, Cosmetic } from "../types/type";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiClient from "../services/apiServices";
 import { paymentSchema } from "../types/validationBooking";
 
@@ -132,6 +132,46 @@ export default function PaymentPage(){
                 String(item.quantity)  
             );
         });
+
+        try {
+          setLoading(true);
+          const response = await apiClient.post(
+            "/booking-transaction",
+            submissionData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          if(response.status === 200 || response.status === 201){
+            console.log("Transaction response data:", response.data.data);
+            const bookingTrxId = response.data.data.booking_trx_id;
+
+            if(!bookingTrxId){
+              console.error("Error: booking_trx_id is undefined");
+            }
+
+            setSuccessMessage("Payment proof uploaded successfully!");
+
+            localStorage.removeItem("cart");
+            localStorage.removeItem("bookingData");
+            
+            setFormData({ proof: null, cosmetic_ids: []});
+            
+            setLoading(false);
+            
+            navigate(`/booking-finished?trx_id=${bookingTrxId}`);
+          } else {
+            console.error("Unexpected response status:", response.status);
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error("Error submitting payment proof:", error);
+          setLoading(false);
+          setFormErrors([]);
+        }
+
     };
 
     // Format currency
@@ -157,7 +197,7 @@ export default function PaymentPage(){
     <div className="px-5">
       <div className="mt-5 flex w-full flex-col gap-5 rounded-3xl bg-white pb-[44px] pt-3">
         <div className="relative">
-          <a href="booking.html">
+          <Link to={`/booking`}>
             <div className="absolute left-3 top-1/2 flex size-[44px] shrink-0 -translate-y-1/2 items-center justify-center rounded-full border border-cosmetics-greylight">
               <img
                 src="/assets/images/icons/left.svg"
@@ -165,7 +205,7 @@ export default function PaymentPage(){
                 className="size-5 shrink-0"
               />
             </div>
-          </a>
+          </Link>
           <div className="flex flex-col gap-[2px]">
             <h1 className="text-center text-lg font-bold leading-[27px]">
               Payment
@@ -562,7 +602,8 @@ export default function PaymentPage(){
               </p>
               <input
                 type="file"
-                name="file-upload"
+                name="proof"
+                onChange={handleChange}
                 id="file-upload"
                 className="absolute top-1/2 w-full -translate-y-1/2 rounded-full py-[15px] pl-[57px] pr-[13px] font-semibold text-[#030504] opacity-0 file:hidden focus:outline-none"
               />
@@ -576,16 +617,19 @@ export default function PaymentPage(){
               </div>
             </div>
           </div>
-          <p className="text-sm leading-[21px] text-[#E70011]">
-            Lorem tidak valid silahkan coba lagi ya
-          </p>
+            {formErrors.find((error) => error.path.includes("proof")) && (
+            <p className="text-sm leading-[21px] text-[#E70011]">
+              {formErrors.find((error) => error.path.includes("proof"))?.message}
+            </p>
+            )}
         </label>
         <button
           type="submit"
+          disabled={loading}
           className="flex w-full items-center justify-between rounded-full bg-cosmetics-gradient-pink-white px-5 py-[14px] transition-all duration-300 hover:shadow-[0px_6px_22px_0px_#FF4D9E82]"
         >
           <strong className="font-semibold text-white">
-            Confirm My Payment
+            {loading ? "Submitting..." : "Confirm My Payment"}
           </strong>
           <img
             src="/assets/images/icons/right.svg"
